@@ -1,0 +1,227 @@
+2025.12.04
+git
+
+
+
+https://github.com/sanghee-1210/next502_gitest1.git
+
+echo "# next502_gitest1" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/sanghee-1210/next502_gitest1.git
+git push -u origin main
+
+
+------------------------------------------------------------------------------------
+https://www.mongodb.com/try/download/community
+mongodb.
+
+사용명령 (12/03)
+>use blog
+blog>db.createCollection("by_road_type")
+
+1 -
+>db.posts.insertOne({
+  title:"Post Title 1",
+  body:"Body of Post",
+  category:"News",
+  likes: 1,
+  tags:["news","events"],
+  date:Date()
+})
+>db.posts.find()
+>db.posts.find({"tags.1":"events"})   //배열 검색시.... tags.0  tags.1 등
+>db.posts.updateOne({title:"Post Title 1"},{$set:{likes:22}})
+1-
+>db.posts.updateMany({},{$inc:{likes:1}})    //1씩 자동증가
+1- //업데이트 없으면 insert로 새로운 row 추가
+>db.posts.updateOne({title:'Post Title 5'},
+{ $set:
+  {
+  title : 'Post Title 5',
+  body:'Body of post',
+  category:'Event',
+  likes:5,
+  tags: ['news','event'],
+  date:Date()
+  }
+},{upsert:true}
+  )
+>db.posts.deleteOne({title:"Post Title 5"})
+>use blog
+db.createCollection("posts")
+db.inventory.insertMany( [
+   { item: "journal", qty: 25, size: { h: 14, w: 21, uom: "cm" }, status: "A" },
+   { item: "notebook", qty: 50, size: { h: 8.5, w: 11, uom: "in" }, status: "A" },
+   { item: "paper", qty: 100, size: { h: 8.5, w: 11, uom: "in" }, status: "D" },
+   { item: "planner", qty: 75, size: { h: 22.85, w: 30, uom: "cm" }, status: "D" },
+   { item: "postcard", qty: 45, size: { h: 10, w: 15.25, uom: "cm" }, status: "A" }
+]);
+>db.inventory.find({"size.uom":"cm"})
+db.inventory.find({"size.h":{$lt:15},"size.uom":"cm",qty:25})
+
+>db.inventory.insertMany([
+{ item: "paper", qty: 100, tags: ["red", "blank", "plain"], dim_cm: [ 14, 21 ] },
+   { item: "planner", qty: 75, tags: ["blank", "red"], dim_cm: [ 22.85, 30 ] } ,
+])
+
+db.inventory.find({dim_cm:{$lt:23}})
+db.inventory.find({dim_cm:{$gt:20, $lt:23}})
+db.inventory.find({dim_cm:{$gt:20, $lt:23},item:"paper"})
+------
+db.inventory.insertMany([
+   { item: "journal", qty: 25, tags: ["blank", "red"], dim_cm: [ 14, 21 ] },
+   { item: "notebook", qty: 50, tags: ["red", "blank"], dim_cm: [ 14, 21 ] },
+   { item: "paper", qty: 100, tags: ["red", "blank", "plain"], dim_cm: [ 14, 21 ] },
+   { item: "planner", qty: 75, tags: ["blank", "red"], dim_cm: [ 22.85, 30 ] },
+   { item: "postcard", qty: 45, tags: ["blue"], dim_cm: [ 10, 15.25 ] }
+]);
+db.inventory.find({tags:{$size:3}})
+
+-------
+db.inventory.insertMany( [
+   { item: "journal", instock: [ { warehouse: "A", qty: 5 }, { warehouse: "C", qty: 15 } ] },
+   { item: "notebook", instock: [ { warehouse: "C", qty: 5 } ] },
+   { item: "paper", instock: [ { warehouse: "A", qty: 60 }, { warehouse: "B", qty: 15 } ] },
+   { item: "planner", instock: [ { warehouse: "A", qty: 40 }, { warehouse: "B", qty: 5 } ] },
+   { item: "postcard", instock: [ { warehouse: "B", qty: 15 }, { warehouse: "C", qty: 35 } ] }
+]);
+
+>db.inventory.find({instock:{warehouse:"B",qty:15}})
+>db.inventory.find({"instock.qty":{$lt:20}})
+>db.inventory.find({"instock.qty":{$gte:60}})
+
+>db.by_road_type.find({"기타단일로.death_toll":0},{county:1,"기타단일로.death_toll":1})
+db.posts.find({likes:{$not:{$gt:5}}})
+
+>db.by_type.find({type:"차대차", accident_count: {$gte:100},death_toll:0
+      },
+     { county:1, accident_count:1
+      }
+)
+
+>db.by_type.find(
+     { type:"차대사람",
+       $or:[  {death_toll:0.0} ,{heavy_injury:0} ]
+     }
+     ,
+     {type:1, county:1, accident_count:1,death_toll:1, heavy_injury:1}
+)
+
+db.by_month.find({
+	city_or_province:"서울","month_data.accident_count":{$gte:200}
+     }
+     , {city_or_province:1,county:1
+       }
+)
+--db.by_month.find({
+	city_or_province:"서울","month_data.accident_count":{$gte:200}
+     }
+     , {city_or_province:1,"month_data.accident_count":1
+       }
+)
+
+>db.by_month.find(
+   { 
+    
+      "month_data.month":"01월",  "month_data.heavy_injury":0  
+     ,
+     "month_data.month":"02월" ,"month_data.death_toll":0
+  }
+   ,{ county:1,_id:0 ,"month_data.month":1,"month_data.heavy_injury":1, "month_data.death_toll":1
+}
+)
+
+db.by_month.find(
+   { $and:[
+      {month_data:{$elemMatch:{month:"01월", heavy_injury:0 }} },
+      {month_data:{$elemMatch:{month:"02월",death_toll:0 }} }
+    ]
+  }
+   ,{ county:1,_id:0 }
+)
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------
+
+*공유폴더
+\\10.100.202.2\공유폴더\웹표준U구현\251028
+\\10.100.202.2\__1028공유폴더\웹표준UI구현\251031
+
+*작업폴더
+C:\jsh\work_vsc
+
+Oracle 홈 c:\app\it\product\21c\dbhomeXE\
+Oracle 기본위치 c:\app\it\product\21c\
+localhost:1521
+EM Express URL:  
+      https://localhost5501/em
+
+-----------------------
+cmd 창에서 c:\Users\it>sqlplus
+system/12345
+sql>exit ==> 나가기
+scott/tiger
+-----------------------
+* sys권한으로 접속해서 scott
+C:\Users\it>sqlplus sys/oracle as sysdba
+
+SQL> alter session set "_oracle_script"=true;
+SQL> create user scott
+  2  identified by tiger
+  3  default tablespace users quota unlimited on users;
+==> 사용자 생성
+
+-------------------------------------------------------------
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0에서 분리되었습니다.
+
+C:\Users\it>sqlplus sys/oracle as sysdba
+
+SQL*Plus: Release 21.0.0.0.0 - Production on 수 11월 5 12:24:23 2025
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+
+다음에 접속됨:
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+
+SQL> alter session set "_oracle_script"=true;
+
+세션이 변경되었습니다.
+
+SQL> create user scott
+  2  identified by tiger
+  3  default tablespace users quota unlimited on users;
+
+사용자가 생성되었습니다.
+
+SQL> grant create session,create table to scott;
+
+권한이 부여되었습니다.
+----------------------------------------------
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> show user
+USER은 "SCOTT"입니다
+SQL> alter session set "_oracle_script"=true;
+
+세션이 변경되었습니다.
+
+SQL> alter session set nls_date_language='american';
+
+세션이 변경되었습니다.
+
+SQL> alter session set nls_date_format='dd-MON-rr';
+
+세션이 변경되었습니다.
+SQL> @C:\doitoracle_scott.sql
+
+
+
